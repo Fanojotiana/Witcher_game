@@ -1,9 +1,12 @@
+let bg_music = new Audio("sounds effect/guitar.mp3");
+
+
 let move_speed = 3,
   grativy = 0.5;
 let witcher = document.querySelector(".witcher");
 let img = document.getElementById("witcher-1");
-let sound_point = new Audio("sounds effect/point.mp3");
-let sound_die = new Audio("sounds effect/die.mp3");
+let sound_point = new Audio("sounds effect/get.mp3");
+let sound_die = new Audio("sounds effect/game-over.mp3");
 
 // getting witcher element properties
 let witcher_props = witcher.getBoundingClientRect();
@@ -19,18 +22,36 @@ let game_state = "Start";
 img.style.display = "none";
 message.classList.add("messageStyle");
 
-document.addEventListener("keydown", (e) => {
-  if (e.key == "Enter" && game_state != "Play") {
-    document.querySelectorAll(".pipe_sprite").forEach((e) => {
-      e.remove();
+
+bg_music.loop = true; // pour que la musique se répète en boucle
+bg_music.volume = 1.0;
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Enter" && game_state !== "Play") {
+
+    // Supprimer tous les tuyaux existants
+    document.querySelectorAll(".pipe_sprite").forEach(pipe => {
+      pipe.remove();
     });
+
+    // Afficher le Witcher et réinitialiser sa position
     img.style.display = "block";
     witcher.style.top = "100vh";
+
+    // Changer l'état du jeu
     game_state = "Play";
+
+    // Réinitialiser l'affichage du score et du message
     message.innerHTML = "";
     score_title.innerHTML = "Score : ";
     score_val.innerHTML = "0";
     message.classList.remove("messageStyle");
+
+    // Lancer la musique de fond (optionnel)
+    if (bg_music) {
+      bg_music.play().catch(err => console.log("Musique bloquée :", err));
+    }
+
+    // Démarrer le jeu
     play();
   }
 });
